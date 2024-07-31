@@ -1,5 +1,9 @@
 class Pokemon {
-  final int id = 1;
-  final String name = "";
+  int? id;
+  String? name;
+  String? thumbnailUrl;
+  int? height;
+  int? weight;
 
+  Pokemon({this.id, this.name, this.thumbnailUrl, this.height, this.weight});
 }
