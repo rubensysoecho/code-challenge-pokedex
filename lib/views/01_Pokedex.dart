@@ -1,3 +1,4 @@
+import 'package:code_challenge_pokedex/widgets/PokeContainer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,6 +21,12 @@ class _PokedexPageState extends State<PokedexPage> {
     super.initState();
     pokeBloc = PokedexGetBloc();
     pokeBloc.add(PokedexGetKantoPokemon());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    pokeBloc.close();
   }
 
   @override
@@ -48,7 +55,7 @@ class _PokedexPageState extends State<PokedexPage> {
               ),
             );
           }
-          if (state is PokedexGetFailed)  {
+          if (state is PokedexGetFailed) {
             return Center(
               child: ElevatedButton(
                 onPressed: () {
@@ -60,16 +67,14 @@ class _PokedexPageState extends State<PokedexPage> {
           }
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3),
+              crossAxisCount: 3,
+            ),
             itemCount: pokemonList.length,
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  color: Colors.white,
-                  child: Center(
-                    child: Text('$index'),
-                  ),
+                child: PokeContainer(
+                  pk: pokemonList[index],
                 ),
               );
             },

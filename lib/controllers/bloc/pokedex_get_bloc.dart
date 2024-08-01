@@ -10,35 +10,38 @@ part 'pokedex_get_state.dart';
 
 class PokedexGetBloc extends Bloc<PokedexGetEvent, PokedexGetState> {
   PokedexGetBloc() : super(PokedexGetInitial()) {
+    // TODO: Implementar paginación para mejorar rendimiento
     on<PokedexGetKantoPokemon>((event, emit) async {
       try {
         List<Pokemon> pokemonList = [];
         emit(PokedexGetLoading());
-        final url = Uri.parse("https://pokeapi.co/api/v2/pokedex/2/");
-        final res = await http.get(url);
-        final body = jsonDecode(res.body);
-        final pokemonResList = body['pokemon_entries'];
-        for(var pokemon in pokemonResList) {
-          var pokeUrl = pokemon['pokemon_species']['url'];
-          var pokeParsedUrl = Uri.parse(pokeUrl);
-          var pokeRes = await http.get(pokeParsedUrl);
-          var pokeBody = jsonDecode(pokeRes.body);
-          var id = pokeBody['id'];
-          var name = pokeBody['name'];
-
-          pokeUrl = 'https://pokeapi.co/api/v2/pokemon/${pokeBody['name']}';
-          pokeParsedUrl = Uri.parse(pokeUrl);
-          pokeRes = await http.get(pokeParsedUrl);
-          pokeBody = jsonDecode(pokeRes.body);
-
-          Pokemon pk = Pokemon(id: id, name: name, height: pokeBody['height'], weight: pokeBody['weight'], thumbnailUrl: pokeBody['sprites']['front_default']);
-          pokemonList.add(pk);
+        for (int i = 1; i <= 151; i++) {
+          final url = Uri.parse("https://pokeapi.co/api/v2/pokemon/$i");
+          final res = await http.get(url);
+          final body = jsonDecode(res.body);
+          var id = body['id'];
+          var name = body['name'];
+          pokemonList.add(
+            Pokemon(
+              id: id,
+              name: name,
+              height: body['height'],
+              weight: body['weight'],
+              thumbnailUrl: body['sprites']['front_default'],
+              type: body['types'][0]['type']['name']
+            ),
+          );
+          print('$name added - $i/151');
         }
         print('Pokemons loaded');
         return emit(PokedexGetLoaded(pokemonList: pokemonList));
       } catch (e) {
         return emit(PokedexGetFailed());
       }
+    });
+
+    on<PokedexGetSearchedPokemon>((event, emit) async{
+
     });
   }
 }
