@@ -36,12 +36,29 @@ class PokedexGetBloc extends Bloc<PokedexGetEvent, PokedexGetState> {
         print('Pokemons loaded');
         return emit(PokedexGetLoaded(pokemonList: pokemonList));
       } catch (e) {
-        return emit(PokedexGetFailed());
+        return emit(PokedexGetFailed(error: 'Error al obtener pokemons'));
       }
     });
 
     on<PokedexGetSearchedPokemon>((event, emit) async{
-
+      emit(PokedexGetLoading());
+      final url = Uri.parse("https://pokeapi.co/api/v2/pokemon/${event.pokemonName}");
+      final res = await http.get(url);
+      if (res.statusCode != 200) {
+        return emit(PokedexGetFailed(error: "No se ha encontrado el pokemon buscado"));
+      }
+      final body = jsonDecode(res.body);
+      var id = body['id'];
+      var name = body['name'];
+      Pokemon pk = Pokemon(
+          id: id,
+          name: name,
+          height: body['height'],
+          weight: body['weight'],
+          thumbnailUrl: body['sprites']['front_default'],
+          type: body['types'][0]['type']['name']
+      );
+      return emit(PokedexGetFounded(foundedPokemon: pk));
     });
   }
 }

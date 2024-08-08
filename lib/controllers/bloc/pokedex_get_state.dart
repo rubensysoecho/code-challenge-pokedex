@@ -13,4 +13,14 @@ final class PokedexGetLoaded extends PokedexGetState {
   PokedexGetLoaded({required this.pokemonList});
 }
 
-final class PokedexGetFailed extends PokedexGetState {}
+final class PokedexGetFounded extends PokedexGetState {
+  final Pokemon foundedPokemon;
+
+  PokedexGetFounded({required this.foundedPokemon});
+}
+
+final class PokedexGetFailed extends PokedexGetState {
+  final String error;
+
+  PokedexGetFailed({required this.error});
+}

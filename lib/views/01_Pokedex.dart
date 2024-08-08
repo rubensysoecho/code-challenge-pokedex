@@ -13,6 +13,7 @@ class PokedexPage extends StatefulWidget {
 }
 
 class _PokedexPageState extends State<PokedexPage> {
+  late TextEditingController pokemonSearchController;
   late PokedexGetBloc pokeBloc;
   List<Pokemon> pokemonList = [];
 
@@ -21,6 +22,7 @@ class _PokedexPageState extends State<PokedexPage> {
     super.initState();
     pokeBloc = PokedexGetBloc();
     pokeBloc.add(PokedexGetKantoPokemon());
+    pokemonSearchController = TextEditingController();
   }
 
   @override
@@ -29,20 +31,53 @@ class _PokedexPageState extends State<PokedexPage> {
     pokeBloc.close();
   }
 
+  void submit() {
+    pokeBloc.add(PokedexGetSearchedPokemon(pokemonName: pokemonSearchController.value.text.toLowerCase()));
+    Navigator.of(context).pop(pokemonSearchController.text);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        shape: const CircleBorder(),
+        child: const Icon(Icons.search),
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Introduzca el nombre del Pokemon'),
+                content: TextField(
+                  controller: pokemonSearchController,
+                  cursorColor: Colors.red,
+                ),
+                actions: [
+                  TextButton(onPressed: submit, child: const Icon(Icons.search))
+                ],
+              );
+            },
+          );
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: BlocConsumer<PokedexGetBloc, PokedexGetState>(
         bloc: pokeBloc,
         listener: (context, state) {
+          if (state is PokedexGetFounded) {
+            setState(() {
+              pokemonList = [];
+            });
+            pokemonList.add(state.foundedPokemon);
+          }
           if (state is PokedexGetLoaded) {
             print('=> ${state.pokemonList.length} Pokemon loaded');
             pokemonList = state.pokemonList;
           }
           if (state is PokedexGetFailed) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Ha ocurrido un error al cargar'),
+              SnackBar(
+                content: Text(state.error),
               ),
             );
           }
