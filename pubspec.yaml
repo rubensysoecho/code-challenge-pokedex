@@ -15,6 +15,7 @@ dependencies:
   flutter_bloc: ^8.1.6
   http: ^1.2.0
   string_capitalize: ^0.0.10
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:

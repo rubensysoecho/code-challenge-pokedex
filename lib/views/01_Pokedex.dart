@@ -101,6 +101,7 @@ class _PokedexPageState extends State<PokedexPage> {
             );
           }
           return GridView.builder(
+            physics: const ScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
             ),

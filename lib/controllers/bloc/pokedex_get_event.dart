@@ -11,4 +11,10 @@ final class PokedexGetSearchedPokemon extends PokedexGetEvent {
   PokedexGetSearchedPokemon({required this.pokemonName});
 }
 
+final class PokedexCatchPokemon extends PokedexGetEvent {
+  final Pokemon catchedPk;
+
+  PokedexCatchPokemon({required this.catchedPk});
+}
+
 

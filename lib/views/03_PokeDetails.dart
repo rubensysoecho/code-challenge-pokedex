@@ -1,4 +1,7 @@
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:code_challenge_pokedex/widgets/PokeDetailsTile.dart';
 import 'package:flutter/material.dart';
+import 'package:string_capitalize/string_capitalize.dart';
 
 import '../models/pokemon.dart';
 
@@ -11,68 +14,76 @@ class PokeDetails extends StatefulWidget {
 }
 
 class _PokeDetailsState extends State<PokeDetails> {
+  List<Container> carouselItems = [];
+
+  void fillCarousel() {
+    List<String> extraImages = widget.pk.extraImages;
+    extraImages.add(widget.pk.thumbnailUrl!);
+    for (var extraImage in extraImages) {
+      carouselItems.add(
+        Container(
+          width: double.infinity,
+          height: 20,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            image: DecorationImage(
+              image: NetworkImage(extraImage),
+            ),
+          ),
+        ),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fillCarousel();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          Container(
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height * 0.3,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                image: DecorationImage(
-                  image: NetworkImage(widget.pk.thumbnailUrl!),
-                )),
+          CarouselSlider(
+            items: carouselItems,
+            options: CarouselOptions(),
+          ),
+          PokeDetailsTile(pk: widget.pk),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+          ),
+          const SizedBox(
+            width: 300,
+            child: Divider(
+              color: Colors.black,
+            ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(32),
             child: Row(
               children: [
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(16)),
-                  child: const Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.15,
-                ),
-                Text(
-                  widget.pk.name!,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Altura: ${widget.pk.height} cm',
+                      style: const TextStyle(
+                        fontSize: 24,
+                      ),
+                    ),
+                    Text(
+                      'Peso: ${widget.pk.weight} g',
+                      style: const TextStyle(
+                        fontSize: 24,
+                      ),
+                    )
+                  ],
                 ),
               ],
             ),
           ),
-          Text(
-            'ID: ${widget.pk.id}',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-            ),
-          ),
-          Text(
-            'Altura: ${widget.pk.height} cm',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-            ),
-          ),
-          Text(
-            'Peso: ${widget.pk.weight} g',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-            ),
-          )
         ],
       ),
     );

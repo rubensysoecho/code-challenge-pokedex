@@ -23,13 +23,17 @@ class PokedexGetBloc extends Bloc<PokedexGetEvent, PokedexGetState> {
           var name = body['name'];
           pokemonList.add(
             Pokemon(
-              id: id,
-              name: name,
-              height: body['height'],
-              weight: body['weight'],
-              thumbnailUrl: body['sprites']['front_default'],
-              type: body['types'][0]['type']['name']
-            ),
+                id: id,
+                name: name,
+                height: body['height'],
+                weight: body['weight'],
+                thumbnailUrl: body['sprites']['front_default'],
+                type: body['types'][0]['type']['name'],
+                extraImages: [
+                  body['sprites']['back_default'],
+                  body['sprites']['other']['home']['front_default'],
+                  body['sprites']['other']['official-artwork']['front_default']
+                ]),
           );
           print('$name added - $i/151');
         }
@@ -40,12 +44,14 @@ class PokedexGetBloc extends Bloc<PokedexGetEvent, PokedexGetState> {
       }
     });
 
-    on<PokedexGetSearchedPokemon>((event, emit) async{
+    on<PokedexGetSearchedPokemon>((event, emit) async {
       emit(PokedexGetLoading());
-      final url = Uri.parse("https://pokeapi.co/api/v2/pokemon/${event.pokemonName}");
+      final url =
+      Uri.parse("https://pokeapi.co/api/v2/pokemon/${event.pokemonName}");
       final res = await http.get(url);
       if (res.statusCode != 200) {
-        return emit(PokedexGetFailed(error: "No se ha encontrado el pokemon buscado"));
+        return emit(
+            PokedexGetFailed(error: "No se ha encontrado el pokemon buscado"));
       }
       final body = jsonDecode(res.body);
       var id = body['id'];
@@ -56,8 +62,12 @@ class PokedexGetBloc extends Bloc<PokedexGetEvent, PokedexGetState> {
           height: body['height'],
           weight: body['weight'],
           thumbnailUrl: body['sprites']['front_default'],
-          type: body['types'][0]['type']['name']
-      );
+          type: body['types'][0]['type']['name'],
+          extraImages: [
+            body['sprites']['back_default'],
+            body['sprites']['other']['home']['front_default'],
+            body['sprites']['other']['official-artwork']['front_default']
+          ]);
       return emit(PokedexGetFounded(foundedPokemon: pk));
     });
   }
