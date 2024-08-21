@@ -6,7 +6,9 @@ import '../controllers/bloc/pokedex_get_bloc.dart';
 import '../models/pokemon.dart';
 
 class PokedexPage extends StatefulWidget {
-  const PokedexPage({super.key});
+  const PokedexPage({super.key, required this.pokemonList, required this.pokeBloc});
+  final List<Pokemon> pokemonList;
+  final PokedexGetBloc pokeBloc;
 
   @override
   State<PokedexPage> createState() => _PokedexPageState();
@@ -20,8 +22,8 @@ class _PokedexPageState extends State<PokedexPage> {
   @override
   void initState() {
     super.initState();
-    pokeBloc = PokedexGetBloc();
-    pokeBloc.add(PokedexGetKantoPokemon());
+    pokeBloc = widget.pokeBloc;
+    pokemonList = widget.pokemonList;
     pokemonSearchController = TextEditingController();
   }
 

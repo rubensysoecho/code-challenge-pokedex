@@ -1,4 +1,5 @@
 import 'package:code_challenge_pokedex/views/Dashboard.dart';
+import 'package:code_challenge_pokedex/views/SplashScreen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: const SplashScreen(),
     );
   }
 }

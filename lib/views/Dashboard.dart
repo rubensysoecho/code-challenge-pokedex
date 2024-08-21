@@ -4,18 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import '../controllers/bloc/pokedex_get_bloc.dart';
+import '../models/pokemon.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
+class Dashboard extends StatefulWidget {
+  const Dashboard({super.key, required this.pokemonList, required this.pokeBloc});
+  final List<Pokemon> pokemonList;
+  final PokedexGetBloc pokeBloc;
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<Dashboard> createState() => _DashboardState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
-
-
+  List<Pokemon> pokemonList = [];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -26,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
+    pokemonList = widget.pokemonList;
   }
 
   @override
@@ -51,9 +52,9 @@ class _HomePageState extends State<HomePage> {
 
       body: IndexedStack(
         index: _selectedIndex,
-        children: const [
-          PokedexPage(),
-          CapturedPage(),
+        children: [
+          PokedexPage(pokemonList: pokemonList, pokeBloc: widget.pokeBloc,),
+          const CapturedPage(),
         ],
       ),
     );
