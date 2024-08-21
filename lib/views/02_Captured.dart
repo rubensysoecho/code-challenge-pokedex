@@ -13,7 +13,7 @@ class _CapturedPageState extends State<CapturedPage> {
   List<Pokemon> catchedPokemons = [];
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
   }
 

@@ -16,6 +16,7 @@ dependencies:
   http: ^1.2.0
   string_capitalize: ^0.0.10
   carousel_slider: ^4.2.1
+  objectbox: ^4.0.2
 
 dev_dependencies:
   flutter_test:

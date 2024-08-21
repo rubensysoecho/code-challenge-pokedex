@@ -1,4 +1,4 @@
-import 'package:code_challenge_pokedex/widgets/PokeContainer.dart';
+import 'package:code_challenge_pokedex/widgets/PokeGridView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -100,21 +100,7 @@ class _PokedexPageState extends State<PokedexPage> {
               ),
             );
           }
-          return GridView.builder(
-            physics: const ScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-            ),
-            itemCount: pokemonList.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: PokeContainer(
-                  pk: pokemonList[index],
-                ),
-              );
-            },
-          );
+          return PokeGridView(pokemonList: pokemonList);
         },
       ),
     );
